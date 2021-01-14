@@ -4,6 +4,7 @@ import { Roles } from '../role/decorators/role.decorator';
 import { RoleGuard } from '../role/guards/role.guard';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { RoleType } from '../role/roletype.enum';
 
 @Controller('users')
 export class UserController {
@@ -11,7 +12,7 @@ export class UserController {
         
     }
     @Get(':id')
-    @Roles('ADMIN')
+    @Roles(RoleType.ADMIN)
     @UseGuards(AuthGuard(),RoleGuard)
     async getUser(@Param('id',ParseIntPipe) id:number):Promise<User>{
         const user = this._userService.get(id);
