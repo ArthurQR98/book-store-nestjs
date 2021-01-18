@@ -1,7 +1,7 @@
 import { TypeOrmModule } from '@nestjs/typeorm'; 
-import { Configuration } from '../../src/config/config.keys';
-import { ConfigModule } from '../../src/config/config.module';
-import { ConfigService } from '../../src/config/config.service';
+import { Configuration } from '../config/config.keys';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
 import { ConnectionOptions } from 'typeorm';
 
 export const databaseProviders = [
