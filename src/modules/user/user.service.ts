@@ -2,11 +2,11 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "./user.entity";
 import { UserRepository } from "../user/user.repository";
-import { UserDetails } from "./user.details.entity";
-import { getConnection } from "typeorm";
-import { Role } from "../role/role.entity";
 import { RoleRepository } from "../role/role.repository";
 import { status } from '../../shared/entity-status.enum';
+import { ReadUserDto } from './dto/read-user.dto';
+import { plainToClass } from 'class-transformer';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService{
@@ -17,7 +17,7 @@ export class UserService{
         private readonly _roleRepository:RoleRepository,
     ){}
     
-    async get(id:number):Promise<User> {
+    async get(id:number):Promise<ReadUserDto> {
             if(!id){
                 throw new BadRequestException("id must be sent");
             }
@@ -28,41 +28,37 @@ export class UserService{
             throw new NotFoundException();
         }
 
-        return user;
+        return plainToClass(ReadUserDto, user);
     }
     
-    async getAll():Promise<User[]> {
+    async getAll():Promise<ReadUserDto[]> {
         
     const users:User[] = await this._userRepository.find({where:{status:status.ACTIVE},
     });
 
-    return users;
+    return users.map((user:User)=>plainToClass(ReadUserDto,user));
     }
 
-    async create(user:User): Promise<User> {
-        const details = new UserDetails();
-        user.details = details;
-
-        const repo = await getConnection().getRepository(Role);
-        
-        const savedUser:User = await this._userRepository.save(user);
-        return savedUser;
+    async update(userId:number, user:UpdateUserDto): Promise<ReadUserDto>{
+        const foundUser = await this._userRepository.findOne(userId,{where:{status : status.ACTIVE}});
+        if(!foundUser){
+            throw new NotFoundException('User does not exits');
+        }
+        foundUser.username = user.username;
+        const updatedUser = await this._userRepository.save(foundUser);
+        return plainToClass(ReadUserDto,updatedUser);
     }
 
-    async update(id:number, user:User): Promise<void>{
-        await this._userRepository.update(id,user);
-    }
-
-    async delete(id:number):Promise<void>{
-        const userExist = await this._userRepository.findOne(id, {where:{status:status.ACTIVE},
+    async delete(userId:number):Promise<void>{
+        const userExist = await this._userRepository.findOne(userId, {where:{status:status.ACTIVE},
         });
     if(!userExist){
         throw new NotFoundException();
     }
-        await this._userRepository.update(id, {status: status.INACTIVE})
+        await this._userRepository.update(userId, {status: status.INACTIVE})
     }
     
-    async setRoleToUser(userId:number, roleId:number){
+    async setRoleToUser(userId:number, roleId:number):Promise<boolean>{
         const userExist = await this._userRepository.findOne(userId, {where:{status:status.ACTIVE},
         });
 
