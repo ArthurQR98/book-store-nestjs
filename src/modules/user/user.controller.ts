@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGua
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../role/decorators/role.decorator';
 import { RoleGuard } from '../role/guards/role.guard';
-import { User } from './user.entity';
 import { UserService } from './user.service';
 import { RoleType } from '../role/roletype.enum';
 import { ReadUserDto } from './dto/read-user.dto';
