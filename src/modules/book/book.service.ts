@@ -44,9 +44,12 @@ export class BookService {
         if (!authorId) {
             throw new BadRequestException('id must be sent');
         }
-        const books: Book[] = await this._bookRepository.find({
-            where: { status: status.ACTIVE, authors: In([authorId]) }
-        });
+        const books: Book[] = await this._bookRepository.createQueryBuilder('books')
+        .leftJoinAndSelect("books.authors", "users")
+        .where('books.status = :status',{status : status.ACTIVE})
+        .andWhere("users.id = :id ", { id: authorId })
+        .getMany();
+        
         return books.map(book => plainToClass(ReadBookDto, book));
     }
 
