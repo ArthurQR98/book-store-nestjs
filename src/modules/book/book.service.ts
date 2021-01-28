@@ -6,7 +6,6 @@ import { status } from '../../shared/entity-status.enum';
 import { ReadBookDto } from './dtos/read-book.dto';
 import { plainToClass } from 'class-transformer';
 import { Book } from './book.entity';
-import { In } from 'typeorm';
 import { CreateBookDto } from './dtos/create-book.dto';
 import { User } from '../user/user.entity';
 import { Role } from '../role/role.entity';

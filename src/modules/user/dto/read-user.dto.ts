@@ -1,5 +1,5 @@
 import { Exclude, Expose, Type } from "class-transformer";
-import { IsEmail, IsMagnetURI, IsNumber, IsString } from "class-validator";
+import { IsEmail, IsNumber, IsString } from "class-validator";
 import { ReadUserDetailDto } from './read-user-detail.dto';
 import { ReadRoleDto } from '../../role/dtos/read-role.dto';
 
