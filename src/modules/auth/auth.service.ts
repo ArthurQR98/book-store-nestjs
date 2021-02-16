@@ -16,9 +16,7 @@ export class AuthService {
         @InjectRepository(AuthRepository)
         private readonly _authRepository:AuthRepository,
         private readonly _jwtService:JwtService,
-        ) {
-        
-    }
+        ) {}
 
     async signup(signupDto: SignupDto):Promise<void>{
         const { username, email } = signupDto;

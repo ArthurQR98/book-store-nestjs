@@ -7,5 +7,4 @@ export class SigninDto {
     @IsNotEmpty()
     @IsString()
     password:string;
-
 }
