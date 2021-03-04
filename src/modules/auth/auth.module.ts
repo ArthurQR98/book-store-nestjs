@@ -11,24 +11,24 @@ import { ConfigModule } from '../../config/config.module';
 import { Configuration } from '../../config/config.keys';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([AuthRepository]), PassportModule.register({
+  imports: [TypeOrmModule.forFeature([AuthRepository]), PassportModule.register({
     defaultStrategy: 'jwt',
   }),
   JwtModule.registerAsync({
     imports: [ConfigModule],
     inject: [ConfigService],
-    useFactory(config:ConfigService){
+    useFactory(config: ConfigService) {
       return {
-        secret : config.get(Configuration.JWT_SECRET),
-        signOptions : {
-          expiresIn : 3600,
+        secret: config.get(Configuration.JWT_SECRET),
+        signOptions: {
+          expiresIn: config.get(Configuration.JWT_EXPIRE_TIME),
         }
       };
     },
   })
-],
+  ],
   controllers: [AuthController],
   providers: [AuthService, ConfigService, JwtStrategy],
   exports: [JwtStrategy, PassportModule]
 })
-export class AuthModule {}
+export class AuthModule { }
